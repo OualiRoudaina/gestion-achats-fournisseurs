@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gestion-achats-backend
+  labels:
+    app: gestion-achats-backend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gestion-achats-backend
+  template:
+    metadata:
+      labels:
+        app: gestion-achats-backend
+    spec:
+      containers:
+        - name: backend
+          image: gestion-achats-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: docker
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  labels:
+    app: gestion-achats-backend
+spec:
+  selector:
+    app: gestion-achats-backend
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: ClusterIP
