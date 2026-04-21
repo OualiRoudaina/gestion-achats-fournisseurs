@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: gestion-achats-frontend:latest
+          image: roudainaouali/gestion-achats-frontend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80

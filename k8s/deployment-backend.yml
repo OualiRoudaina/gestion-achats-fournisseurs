@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: backend
-          image: gestion-achats-backend:latest
+          image: roudainaouali/gestion-achats-backend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
