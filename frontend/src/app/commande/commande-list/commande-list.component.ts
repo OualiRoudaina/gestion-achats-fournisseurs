@@ -39,7 +39,7 @@ export class CommandeListComponent implements OnInit {
     this.router.navigate(['/commandes/edit', commande.id]);
   }
 
-  onDelete(commande: any): void {
+  onDelete(_commande: any): void {
     if (confirm('Êtes-vous sûr de vouloir supprimer cette commande ?')) {
       // TODO: Implement delete
       this.loadCommandes();

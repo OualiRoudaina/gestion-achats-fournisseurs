@@ -113,7 +113,7 @@ export class HistoriqueFormComponent implements OnInit {
         : this.historiqueService.createHistoriqueAchat(historiqueData);
 
       request.subscribe({
-        next: (historique) => {
+        next: (_historique) => {
           this.loading = false;
           this.successMessage = this.isEditMode 
             ? 'Historique modifié avec succès !' 
