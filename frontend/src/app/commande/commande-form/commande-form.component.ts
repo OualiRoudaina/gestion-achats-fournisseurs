@@ -111,7 +111,7 @@ export class CommandeFormComponent implements OnInit {
         : this.commandeService.createCommande(commandeData);
 
       request.subscribe({
-        next: (commande) => {
+        next: (_commande) => {
           this.loading = false;
           this.successMessage = this.isEditMode 
             ? 'Commande modifiée avec succès !' 
