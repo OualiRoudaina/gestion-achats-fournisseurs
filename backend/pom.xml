@@ -21,6 +21,7 @@
     <properties>
         <java.version>17</java.version>
         <springdoc.version>2.2.0</springdoc.version>
+        <tomcat.version>10.1.53</tomcat.version>
          <sonar.organization>oualiroudaina</sonar.organization>
     <sonar.projectKey>OualiRoudaina_gestion-achats-fournisseurs</sonar.projectKey>
     <sonar.host.url>https://sonarcloud.io</sonar.host.url>
