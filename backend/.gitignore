@@ -1,0 +1,22 @@
+# Database files (H2 - si vous revenez à H2)
+data/
+*.mv.db
+*.trace.db
+*.lock.db
+
+# MySQL (généralement pas nécessaire car MySQL stocke dans son propre répertoire)
+
+# Maven
+target/
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.idea/
+*.iml
+.vscode/
+*.class
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
