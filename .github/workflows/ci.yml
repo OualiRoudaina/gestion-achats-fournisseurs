@@ -1,0 +1,102 @@
+name: CI Pipeline — Gestion Achats
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  backend:
+    name: Backend — Test, Sonar, Build, Scan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Run tests
+        run: mvn -B test
+
+      - name: SonarCloud Analysis
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          mvn sonar:sonar \
+            -Dsonar.projectKey=OualiRoudaina_gestion-achats-fournisseurs \
+            -Dsonar.organization=oualiroudaina \
+            -Dsonar.host.url=https://sonarcloud.io
+
+      - name: Build Docker image backend
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gestion-achats-backend:latest .
+
+      - name: Scan image Trivy backend
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/gestion-achats-backend:latest'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL'
+
+      - name: Push image backend
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/gestion-achats-backend:latest
+
+  frontend:
+    name: Frontend — Lint, Test, Build, Scan
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Tests unitaires
+        run: npm test -- --watch=false --browsers=ChromeHeadless
+
+      - name: Build production
+        run: npm run build -- --configuration=production
+
+      - name: Build Docker image frontend
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/gestion-achats-frontend:latest .
+
+      - name: Scan image Trivy frontend
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: '${{ secrets.DOCKERHUB_USERNAME }}/gestion-achats-frontend:latest'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL'
+
+      - name: Push image frontend
+        if: github.ref == 'refs/heads/main'
+        run: |
+          echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/gestion-achats-frontend:latest

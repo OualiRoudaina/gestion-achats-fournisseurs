@@ -3,7 +3,7 @@ import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-declare var bootstrap: any;
+declare const bootstrap: any;
 
 @Component({
   selector: 'app-navbar',

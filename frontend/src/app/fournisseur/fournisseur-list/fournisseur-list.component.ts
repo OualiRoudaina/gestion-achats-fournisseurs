@@ -66,7 +66,7 @@ export class FournisseurListComponent implements OnInit {
 
   onEvaluate(fournisseur: any): void {
     this.fournisseurService.evaluateSupplier(fournisseur.id).subscribe({
-      next: (updatedFournisseur) => {
+      next: (_updatedFournisseur) => {
         this.loadFournisseurs();
       },
       error: (error) => {

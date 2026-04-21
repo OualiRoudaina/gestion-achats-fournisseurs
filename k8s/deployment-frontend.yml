@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gestion-achats-frontend
+  labels:
+    app: gestion-achats-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gestion-achats-frontend
+  template:
+    metadata:
+      labels:
+        app: gestion-achats-frontend
+    spec:
+      containers:
+        - name: frontend
+          image: roudainaouali/gestion-achats-frontend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: frontend
+  labels:
+    app: gestion-achats-frontend
+spec:
+  selector:
+    app: gestion-achats-frontend
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+  type: LoadBalancer
