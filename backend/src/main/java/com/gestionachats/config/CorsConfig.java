@@ -30,12 +30,7 @@ public class CorsConfig implements WebMvcConfigurer {
         CorsConfiguration configuration = new CorsConfiguration();
         
         // Autoriser les origines spécifiques pour le développement
-        configuration.setAllowedOrigins(Arrays.asList(
-            "http://localhost:4200",
-            "http://127.0.0.1:4200",
-            "http://localhost:80",
-            "http://localhost"
-        ));
+        configuration.setAllowedOriginPatterns(Arrays.asList("*"));
         
         // Autoriser toutes les méthodes HTTP
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
