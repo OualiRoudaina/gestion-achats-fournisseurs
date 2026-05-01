@@ -37,6 +37,8 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: docker
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql:3306/gestion_achats?createDatabaseIfNotExist=true&useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
           envFrom:
             - configMapRef:
                 name: app-gcp-config
