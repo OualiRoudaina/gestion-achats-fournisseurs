@@ -1,0 +1,18 @@
+FROM maven:3.9.9-eclipse-temurin-17
+WORKDIR /app
+
+COPY pom.xml .
+RUN mvn dependency:go-offline -B
+
+COPY src ./src
+
+EXPOSE 8080
+EXPOSE 5005
+
+ENV JAVA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005"
+ENV SPRING_PROFILES_ACTIVE=dev
+ENV LOGGING_LEVEL_ROOT=DEBUG
+ENV LOGGING_LEVEL_COM_GESTIONACHATS=DEBUG
+ENV SPRING_DEVTOOLS_RESTART_ENABLED=true
+
+ENTRYPOINT ["sh", "-c", "mvn spring-boot:run -Dspring-boot.run.jvmArguments='$JAVA_OPTS'"]

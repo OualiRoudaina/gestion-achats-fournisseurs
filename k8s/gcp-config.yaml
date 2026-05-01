@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-gcp-config
+  namespace: dev
+data:
+  GOOGLE_CLOUD_PROJECT: "gestion-achats-devops"
+  MODEL_BUCKET: "gs://your-model-bucket"
+  CLOUD_MONITORING_ENABLED: "true"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-gcp-config
+  namespace: test
+data:
+  GOOGLE_CLOUD_PROJECT: "gestion-achats-devops"
+  MODEL_BUCKET: "gs://your-model-bucket"
+  CLOUD_MONITORING_ENABLED: "true"
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-gcp-config
+  namespace: prod
+data:
+  GOOGLE_CLOUD_PROJECT: "gestion-achats-devops"
+  MODEL_BUCKET: "gs://your-model-bucket"
+  CLOUD_MONITORING_ENABLED: "true"

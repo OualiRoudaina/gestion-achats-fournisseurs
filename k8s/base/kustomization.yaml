@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - deployment-backend.yml
+  - deployment-frontend.yml
+  - gcp-config.yaml
+  - volume.yaml
+  - mysql-statefulset.yaml

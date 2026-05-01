@@ -2,7 +2,6 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: gestion-achats-backend
-  namespace: dev
   labels:
     app: gestion-achats-backend
 spec:
@@ -20,28 +19,22 @@ spec:
       labels:
         app: gestion-achats-backend
     spec:
-      # ✅ User non-root pour la sécurité
       securityContext:
         runAsNonRoot: true
         runAsUser: 1000
         fsGroup: 1000
-
       containers:
-        # ─── Conteneur principal : Backend Spring Boot ───────────────────
         - name: backend
           image: gcr.io/gestion-achats-devops/gestion-achats-backend:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
-
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: docker
           envFrom:
             - configMapRef:
                 name: app-gcp-config
-
-          # ✅ Ressources CPU/RAM
           resources:
             requests:
               cpu: "250m"
@@ -49,8 +42,6 @@ spec:
             limits:
               cpu: "500m"
               memory: "1Gi"
-
-          # ✅ Startup Probe — attend que Spring Boot démarre (max 3 min)
           startupProbe:
             httpGet:
               path: /actuator/health
@@ -58,26 +49,18 @@ spec:
             timeoutSeconds: 5
             failureThreshold: 36
             periodSeconds: 10
-
-          # ✅ Liveness Probe — redémarre le pod si l'app est bloquée
           livenessProbe:
             httpGet:
               path: /actuator/health/liveness
               port: 8080
-            initialDelaySeconds: 0
             periodSeconds: 15
             failureThreshold: 3
-
-          # ✅ Readiness Probe — retire le pod du Service s'il n'est pas prêt
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 8080
-            initialDelaySeconds: 0
             periodSeconds: 10
             failureThreshold: 3
-
-        # ─── Sidecar : Prometheus Exporter (monitoring) ──────────────────
         - name: prometheus-exporter
           image: bitnami/jmx-exporter:latest
           ports:
@@ -90,13 +73,11 @@ spec:
             limits:
               cpu: "100m"
               memory: "128Mi"
-
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: backend
-  namespace: dev
   labels:
     app: gestion-achats-backend
 spec:
@@ -112,14 +93,11 @@ spec:
       port: 9090
       targetPort: 9090
   type: ClusterIP
-
 ---
-# ✅ HPA — scalabilité automatique
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
   name: backend-hpa
-  namespace: dev
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
